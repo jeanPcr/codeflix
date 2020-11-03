@@ -93,8 +93,11 @@ const csv2json = function (filename) {
   });
 };
 
+const WTFIsThisPipe = function (params) {};
+
 module.exports = {
   duplicate,
   transform,
   csv2json,
+  WTFIsThisPipe,
 };
