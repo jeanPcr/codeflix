@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { Transform } = require("stream");
+const readline = require("readline");
 
 const duplicate = function duplicate(filename) {
   if (filename === "" || !filename || filename === undefined) {
@@ -50,6 +51,46 @@ const transform = function (textfile, regex, fn, in_stdout = true) {
 
 const csv2json = function (filename) {
   const { name, ext } = path.parse(filename);
+  if (ext !== ".csv") return console.log("You have to pass a CSV file.");
+
+  const reader = fs.createReadStream(filename);
+  const writer = fs.createWriteStream(`${name}.json`);
+  const rl = readline.createInterface({ input: reader });
+  let anArray = [];
+  let headers = [];
+  let values = [];
+  let lineNbr = 0;
+
+  rl.on("line", (line) => {
+    if (lineNbr === 0) {
+      headers = line.split(";");
+    } else {
+      values.push(line.split(";"));
+    }
+    lineNbr++;
+  });
+
+  rl.on("close", () => {
+    values.forEach((value) => {
+      let obj = {};
+      headers.forEach((header, j) => {
+        if (value !== undefined && value.toString() !== "") {
+          if (value[j].includes(",")) {
+            obj[header] = value[j].split(",");
+          } else {
+            obj[header] = value[j];
+          }
+        }
+      });
+      anArray.push(obj);
+    });
+
+    writer.write(JSON.stringify(anArray, null, 1), (err) => {
+      if (err) {
+        console.log(err);
+      } else console.log(`File: ${name}.json successfully created !`);
+    });
+  });
 };
 
 module.exports = {
