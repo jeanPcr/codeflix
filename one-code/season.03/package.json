@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "nodemon": "npx nodemon"
+  },
+  "dependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "name": "season.03",
+  "version": "1.0.0",
+  "main": "e01.js",
+  "license": "MIT"
+}

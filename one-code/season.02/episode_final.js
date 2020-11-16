@@ -1,5 +1,3 @@
-const { on } = require("process");
-
 module.exports = class myEventEmitter {
   constructor() {
     this.events = {};
